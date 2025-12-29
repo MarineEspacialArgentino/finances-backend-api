@@ -127,7 +127,7 @@ python manage.py runserver
 
 ### Example protected endpoint
 
-- `GET /api/categories/`  
+- `GET /api/categorias/`  
   Returns only the categories belonging to the authenticated user
 
 > All protected endpoints require a valid JWT token.
