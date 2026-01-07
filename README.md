@@ -104,6 +104,7 @@ pip install -r requirements.txt
 ### 4. Apply migrations
 
 ```bash
+cd finances_backend
 python manage.py migrate
 ```
 
