@@ -83,8 +83,8 @@ An example file is provided as `.env.example`.
 ### 1. Clone the repository
 
 ```bash
-git clone <repository-url>
-cd <project-folder>
+git clone https://github.com/MarineEspacialArgentino/finances-backend-api
+cd finances-backend-api
 ```
 
 ### 2. Create and activate a virtual environment
