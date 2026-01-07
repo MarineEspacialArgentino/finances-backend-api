@@ -61,22 +61,36 @@ This ensures that users **can only access their own data**, preventing unauthori
 
 Sensitive configuration is managed using environment variables.
 
-Create a `.env` file in the project root:
+Create a `.env` file in the **`finances_backend/` directory** (where `manage.py` is located):
 
 ```env
 SECRET_KEY=your-secret-key
 DEBUG=True
 
-DB_NAME=your_db_name
-DB_USER=your_db_user
+DB_NAME=finances_db
+DB_USER=finances_user
 DB_PASSWORD=your_db_password
-DB_HOST=localhost
+DB_HOST=127.0.0.1
 DB_PORT=3306
 ```
 
 An example file is provided as `.env.example`.
 
+> ⚠️ Make sure the database and user exist in MySQL and that the user has permissions on the database.
+
 ---
+
+### Database Setup (MySQL)
+
+Before running migrations, ensure MySQL is running and create the database and user:
+
+```sql
+CREATE DATABASE finances_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE USER 'finances_user'@'localhost' IDENTIFIED BY 'your_db_password';
+GRANT ALL PRIVILEGES ON finances_db.* TO 'finances_user'@'localhost';
+FLUSH PRIVILEGES;
+
 
 ## Installation and Setup
 
@@ -100,15 +114,20 @@ source .venv/bin/activate  # Linux / macOS
 ```bash
 pip install -r requirements.txt
 ```
+### 4. Configure environment variables
 
-### 4. Apply migrations
+```bash
+Create a .env file inside the finances_backend/ directory and define the required variables
+(see Environment Variables section above).
+```
+### 5. Apply migrations
 
 ```bash
 cd finances_backend
 python manage.py migrate
 ```
 
-### 5. Run the development server
+### 6. Run the development server
 
 ```bash
 python manage.py runserver
