@@ -90,15 +90,17 @@ WSGI_APPLICATION = 'Finances_Backend.wsgi.application'
 
 DB_ENGINE = os.getenv('DB_ENGINE', 'sqlite')
 
+DB_ENGINE = os.getenv('DB_ENGINE', 'sqlite')
+
 if DB_ENGINE == 'mysql':
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.getenv('DB_NAME'),
-            'USER': os.getenv('DB_USER'),
-            'PASSWORD': os.getenv('DB_PASSWORD'),
-            'PORT': os.getenv('DB_PORT'),
-            'HOST': os.getenv('DB_HOST'),
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": os.getenv("DB_NAME", "finances_db"),
+            "USER": os.getenv("DB_USER", "finances_user"),
+            "PASSWORD": os.getenv("DB_PASSWORD", ""),
+            "HOST": os.getenv("DB_HOST", "127.0.0.1"),
+            "PORT": os.getenv("DB_PORT", "3306"),
             'OPTIONS': {
                 'charset': 'utf8mb4',
                 'init_command': 'SET sql_mode="STRICT_ALL_TABLES"'
