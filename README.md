@@ -153,6 +153,26 @@ python manage.py runserver
 
 > All protected endpoints require a valid JWT token.
 
+## Frontend (Optional)
+
+This project includes a minimal frontend used only to test and validate the backend API.
+
+The frontend is **not required** to run or test the backend.
+
+### Running the frontend
+
+```bash
+cd finances_react
+npm install
+npm run dev
+```
+The frontend will be available at:
+
+http://localhost:5173
+
+Make sure the backend is running at:
+
+http://127.0.0.1:8000
 ---
 
 ## Project Focus
