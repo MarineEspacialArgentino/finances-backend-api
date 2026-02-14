@@ -136,7 +136,7 @@ python manage.py runserver
 
 ---
 
-## API Endpoints
+## 📌 API Endpoints
 
 ### Authentication
 
@@ -152,6 +152,107 @@ python manage.py runserver
   Returns only the categories belonging to the authenticated user
 
 > All protected endpoints require a valid JWT token.
+
+### Transactions
+
+#### GET `/api/transacciones/`
+
+Retrieves the authenticated user's transactions with filtering options.
+
+**Query Parameters**
+
+| Parameter | Type | Required | Description | Valid Values | Example |
+|-----------|------|----------|-------------|--------------|---------|
+| `type` | string | No | Filter by transaction category type | `income`, `expense` | `expense` |
+| `last_30_days` | boolean | No | Filter transactions from last 30 days | `true`, `false` | `true` |
+
+**Authentication**
+```
+Authorization: Bearer <access_token>
+```
+
+**Usage Examples**
+
+```bash
+# All transactions
+GET /api/transacciones/
+
+# Only expenses
+GET /api/transacciones/?type=expense
+
+# Last 30 days only
+GET /api/transacciones/?last_30_days=true
+
+# Combined: expenses from last 30 days
+GET /api/transacciones/?type=expense&last_30_days=true
+```
+
+**cURL Example**
+```bash
+curl -X GET "http://localhost:8000/api/transacciones/?type=expense&last_30_days=true" \
+  -H "Authorization: Bearer <your_token>"
+```
+
+**Response (200)**
+
+```json
+[
+  {
+    "id": 1,
+    "amount": "100.50",
+    "category": 3,
+    "date": "2026-02-14",
+    "description": "Salary payment",
+    "user": 1
+  }
+]
+```
+
+---
+
+#### POST `/api/transacciones/`
+
+Creates a new transaction.
+
+**Request Body**
+```json
+{
+  "amount": "100.50",
+  "category": 3,
+  "description": "Optional description"
+}
+```
+
+---
+
+### Technical Implementation
+
+```python name=views.py url=https://github.com/MarineEspacialArgentino/finances-backend-api/blob/d7e6e0a8b325523872a7e0ac2388806603c969b7/Finances_Backend/expenses/views.py#L32-L52
+def get_queryset(self, transaction_type=None, last_30_days=False):
+    user = self.request.user
+    queryset = Transactions.objects.filter(user=user).select_related('category')
+
+    transaction_type = self.request.query_params.get('type')
+    last_30_days = self.request.query_params.get('last_30_days','').lower() == 'true'
+
+    VALID_TRANSACTION_TYPES = ['income', 'expense']
+
+    if transaction_type in VALID_TRANSACTION_TYPES:
+        queryset = queryset.filter(category__type=transaction_type)
+
+    if last_30_days:
+        thirty_days_ago = timezone.now().date() - timedelta(days=30)
+        queryset = queryset.filter(date__gte=thirty_days_ago)
+    
+    return queryset.order_by('-date')
+```
+
+**Key Points**
+- 🔒 JWT authentication required
+- ✅ Users only see their own transactions (`filter(user=user)`)
+- 📊 Results ordered by date (newest first)
+- ⚡ Optimized with `.select_related('category')` to prevent N+1 queries
+
 
 ## Frontend (Optional)
 
